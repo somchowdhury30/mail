@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Update time display nicely
                 const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second:'2-digit' });
-                lastUpdatedEl.innerHTML = `Live Sync Active <span style="opacity:0.5; margin-left:8px">Last check: ${time}</span>`;
+                lastUpdatedEl.innerHTML = `Live Sync Active <span class="hide-on-mobile" style="opacity:0.5; margin-left:8px">Last check: ${time}</span>`;
             } else {
                 showError(result.error);
             }
