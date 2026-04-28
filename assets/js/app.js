@@ -183,8 +183,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Allow enter key on input
+    // Generate random alias logic
+    const generateBtn = document.getElementById('generate-btn');
     const aliasInput = document.getElementById('alias-input');
+    
+    if (generateBtn && aliasInput) {
+        generateBtn.addEventListener('click', () => {
+            if (currentAccountsData && currentAccountsData.length > 0) {
+                // Pick the first account as root
+                const rootEmail = currentAccountsData[0].email;
+                if (rootEmail && rootEmail.includes('@')) {
+                    const parts = rootEmail.split('@');
+                    
+                    const words = ['koala', 'tiger', 'cheetah', 'lion', 'bear', 'panda', 'fox', 'wolf', 'hawk'];
+                    const randomWord = words[Math.floor(Math.random() * words.length)];
+                    const randomNum = Math.floor(Math.random() * 100).toString().padStart(2, '0');
+                    
+                    const generatedAlias = `${parts[0]}+${randomWord}${randomNum}@${parts[1]}`;
+                    aliasInput.value = generatedAlias;
+                    
+                    // Optional: automatically fetch
+                    // fetchBtn.click();
+                }
+            } else {
+                alert("Please wait for accounts to load from backend first!");
+            }
+        });
+    }
+
+    // Allow enter key on input
     if (aliasInput) {
         aliasInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {

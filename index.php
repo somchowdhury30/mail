@@ -36,6 +36,7 @@
             <div class="temp-mail-controls">
                 <div class="input-group">
                     <input type="email" id="alias-input" placeholder="Enter your alias email (e.g. yourname+koala00@gmail.com)" class="elite-input" />
+                    <button id="generate-btn" class="elite-btn btn-secondary">🎲 Generate Random</button>
                     <button id="fetch-btn" class="elite-btn">Check Inbox</button>
                 </div>
                 <div class="hint-text">You will only see emails sent specifically to this address.</div>
