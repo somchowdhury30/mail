@@ -32,9 +32,17 @@
                 <span id="last-updated">Live Sync Active</span>
             </div>
         </header>
+        <main class="main-content">
+            <div class="temp-mail-controls">
+                <div class="input-group">
+                    <input type="email" id="alias-input" placeholder="Enter your alias email (e.g. yourname+koala00@gmail.com)" class="elite-input" />
+                    <button id="fetch-btn" class="elite-btn">Check Inbox</button>
+                </div>
+                <div class="hint-text">You will only see emails sent specifically to this address.</div>
+            </div>
 
-        <main class="inbox-grid" id="inbox-container">
-            <!-- Skeleton Loader -->
+            <div class="inbox-grid" id="inbox-container">
+                <!-- Skeleton Loader -->
             <div class="skeleton-card">
                 <div class="skeleton-header"></div>
                 <div class="skeleton-line"></div>
@@ -46,6 +54,7 @@
                 <div class="skeleton-line"></div>
                 <div class="skeleton-line"></div>
                 <div class="skeleton-line" style="width: 60%;"></div>
+            </div>
             </div>
         </main>
     </div>

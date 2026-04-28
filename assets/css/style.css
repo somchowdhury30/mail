@@ -272,6 +272,81 @@ body {
     .inbox-grid {
         grid-template-columns: 1fr;
     }
+    .modal-content {
+        width: 95%;
+        max-height: 85vh;
+    }
+    .modal-header {
+        padding: 1rem;
+    }
+    .modal-title {
+        font-size: 1.1rem;
+    }
+    .input-group {
+        flex-direction: column;
+    }
+    .elite-btn {
+        width: 100%;
+    }
+}
+
+/* Temp Mail Controls */
+.temp-mail-controls {
+    margin-bottom: 2rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: 12px;
+}
+
+.input-group {
+    display: flex;
+    gap: 1rem;
+}
+
+.elite-input {
+    flex-grow: 1;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border-color);
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.elite-input:focus {
+    border-color: var(--accent-solid);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.elite-btn {
+    background: linear-gradient(135deg, var(--accent-color), #4f46e5);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.elite-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.elite-btn:active {
+    transform: translateY(0);
+}
+
+.hint-text {
+    margin-top: 0.8rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
 }
 
 /* Modal Styling */

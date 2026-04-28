@@ -11,7 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchInboxes() {
         try {
-            const response = await fetch(API_URL);
+            const aliasInput = document.getElementById('alias-input');
+            const toEmail = aliasInput ? aliasInput.value.trim() : '';
+            const queryUrl = toEmail ? `${API_URL}?to_email=${encodeURIComponent(toEmail)}` : API_URL;
+
+            const response = await fetch(queryUrl);
             if (!response.ok) throw new Error('Network response was not ok');
             const result = await response.json();
             
@@ -167,6 +171,27 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.overflow = '';
         }
     });
+
+    // Temp mail Check button logic
+    const fetchBtn = document.getElementById('fetch-btn');
+    if (fetchBtn) {
+        fetchBtn.addEventListener('click', () => {
+            inboxContainer.innerHTML = `
+                <div class="skeleton-card"><div class="skeleton-header"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div>
+            `;
+            fetchInboxes();
+        });
+    }
+
+    // Allow enter key on input
+    const aliasInput = document.getElementById('alias-input');
+    if (aliasInput) {
+        aliasInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                fetchBtn.click();
+            }
+        });
+    }
 
     // Initial fetch
     fetchInboxes();

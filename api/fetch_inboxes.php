@@ -6,9 +6,11 @@ require_once __DIR__ . '/../config/db.php';
 header('Content-Type: application/json; charset=utf-8');
 
 // Configuration
-$CACHE_FILE = __DIR__ . '/../cache/inbox_data.json';
-$CACHE_TTL = 30; // 30 seconds caching to prevent IMAP rate limit blocks
-$FETCH_LIMIT = 10; // Number of emails to fetch per account
+$to_email = isset($_GET['to_email']) ? trim($_GET['to_email']) : '';
+$cache_hash = $to_email ? md5($to_email) : 'all';
+$CACHE_FILE = __DIR__ . '/../cache/inbox_data_' . $cache_hash . '.json';
+$CACHE_TTL = 5; // 5 seconds caching for fast OTP delivery
+$FETCH_LIMIT = 20; // Number of emails to fetch per account
 
 // Utility to decode IMAP MIME headers
 function decode_imap_text($str) {
@@ -102,7 +104,8 @@ if (!is_dir(dirname($CACHE_FILE))) {
 if (!function_exists('imap_open')) {
     // 🚀 LOCAL PC FALLBACK (PYTHON WORKER)
     $python_script = __DIR__ . '/../imap_worker.py';
-    $command = escapeshellcmd("python \"$python_script\"");
+    $cmd_arg = $to_email ? escapeshellarg($to_email) : 'ALL';
+    $command = escapeshellcmd("python \"$python_script\"") . " " . $cmd_arg;
     $output = shell_exec($command);
 
     if (!$output) {
@@ -151,7 +154,8 @@ foreach ($accounts as $acc) {
     if ($imap_stream) {
         $inbox_data["status"] = "success";
         
-        $emails = imap_search($imap_stream, 'ALL');
+        $search_query = $to_email ? 'TO "' . $to_email . '"' : 'ALL';
+        $emails = imap_search($imap_stream, $search_query);
         if ($emails) {
             rsort($emails);
             $latest_emails = array_slice($emails, 0, $FETCH_LIMIT);

@@ -27,6 +27,10 @@ def decode_mime_words(s):
         return str(s)
 
 def fetch_inboxes():
+    search_query = "ALL"
+    if len(sys.argv) > 1 and sys.argv[1].strip() != "" and sys.argv[1].strip() != "ALL":
+        search_query = f'TO "{sys.argv[1].strip()}"'
+
     if not os.path.exists(DB_PATH):
         print(json.dumps({"success": False, "error": "database.json not found"}))
         return
@@ -56,8 +60,8 @@ def fetch_inboxes():
             mail.login(email_addr, password)
             mail.select("inbox")
             
-            status, messages = mail.search(None, "ALL")
-            if status == "OK":
+            status, messages = mail.search(None, search_query)
+            if status == "OK" and messages and messages[0]:
                 inbox_data["status"] = "success"
                 email_ids = messages[0].split()
                 latest_ids = email_ids[-10:] # Get last 10
