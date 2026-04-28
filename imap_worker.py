@@ -61,10 +61,12 @@ def fetch_inboxes():
             mail.select("inbox")
             
             status, messages = mail.search(None, search_query)
-            if status == "OK" and messages and messages[0]:
+            if status == "OK":
                 inbox_data["status"] = "success"
-                email_ids = messages[0].split()
-                latest_ids = email_ids[-10:] # Get last 10
+                latest_ids = []
+                if messages and messages[0]:
+                    email_ids = messages[0].split()
+                    latest_ids = email_ids[-10:] # Get last 10
                 
                 for e_id in reversed(latest_ids):
                     res, msg_data = mail.fetch(e_id, "(RFC822)")
