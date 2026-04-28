@@ -25,6 +25,7 @@
             <div class="brand">
                 <span class="brand-icon">⚡</span>
                 <span class="brand-text">Aether <span class="highlight">Inbox Feed</span></span>
+                <span class="badge badge-success" style="font-size: 0.6rem; margin-left: 10px;">v1.1 Elite</span>
             </div>
             <div class="status-indicator">
                 <div class="pulse-dot"></div>
