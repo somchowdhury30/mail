@@ -38,10 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderInboxes(accounts) {
         if (!accounts || accounts.length === 0) {
             inboxContainer.innerHTML = `
-                <div class="account-card" style="grid-column: 1 / -1; text-align: center; padding: 4rem;">
-                    <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
-                    <h3>No Email Accounts Connected</h3>
-                    <p style="color: var(--text-secondary); margin-top: 0.5rem;">Add accounts from the Admin Panel to see their inboxes here.</p>
+                <div class="col-span-full bg-[#12141c]/65 backdrop-blur-xl border border-[#00f0ff]/15 rounded-2xl p-16 text-center">
+                    <div class="text-5xl mb-4">📭</div>
+                    <h3 class="text-xl font-semibold text-white">No Email Accounts Connected</h3>
+                    <p class="text-slate-400 mt-2">Add accounts from the Admin Panel to see their inboxes here.</p>
                 </div>
             `;
             return;
@@ -51,48 +51,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
         accounts.forEach(acc => {
             const isSuccess = acc.status === 'success';
-            const badgeClass = isSuccess ? 'badge-success' : 'badge-error';
+            const badgeClass = isSuccess ? 'border-[#00ffcc]/30 bg-[#00ffcc]/10 text-[#00ffcc]' : 'border-red-500/30 bg-red-500/10 text-red-500';
             const badgeText = isSuccess ? 'ACTIVE' : 'ERROR';
             
             let emailsHtml = '';
             
             if (isSuccess && acc.messages && acc.messages.length > 0) {
-                emailsHtml = '<ul class="email-list">';
+                emailsHtml = '<ul class="list-none m-0 p-0">';
                 acc.messages.forEach((msg, mIndex) => {
                     emailsHtml += `
-                        <li class="email-item" data-acc="${escapeHtml(acc.email)}" data-msg="${mIndex}">
-                            <div class="email-meta">
-                                <span class="email-sender">${escapeHtml(msg.sender)}</span>
-                                <span class="email-date">${msg.date}</span>
+                        <li class="flex flex-col sm:flex-row gap-2 sm:gap-4 px-6 py-4 border-b border-[#00f0ff]/5 hover:bg-white/5 cursor-pointer transition-colors duration-200 group email-item" data-acc="${escapeHtml(acc.email)}" data-msg="${mIndex}">
+                            <div class="flex sm:w-1/3 justify-between sm:justify-start sm:flex-col sm:gap-1 text-sm">
+                                <span class="font-medium text-slate-300 group-hover:text-white transition-colors">${escapeHtml(msg.sender)}</span>
+                                <span class="text-slate-500 text-xs">${msg.date}</span>
                             </div>
-                            <div class="email-subject">${escapeHtml(msg.subject)}</div>
+                            <div class="font-medium text-white sm:w-2/3 truncate">${escapeHtml(msg.subject)}</div>
                         </li>
                     `;
                 });
                 emailsHtml += '</ul>';
             } else if (!isSuccess) {
                 emailsHtml = `
-                    <div class="empty-state">
-                        <div style="color: var(--danger); margin-bottom: 1rem;">⚠️</div>
+                    <div class="px-6 py-12 text-center text-slate-400 border-t border-[#00f0ff]/15">
+                        <div class="text-red-500 text-3xl mb-4">⚠️</div>
                         <div>${escapeHtml(acc.error_msg || 'Could not authenticate')}</div>
                     </div>
                 `;
             } else {
                 emailsHtml = `
-                    <div class="empty-state">
-                        <div>📭 Inbox is empty</div>
+                    <div class="px-6 py-12 text-center text-slate-400 border-t border-[#00f0ff]/15">
+                        <div class="text-4xl mb-4">📭</div>
+                        <div>Inbox is empty</div>
                     </div>
                 `;
             }
 
             html += `
-                <div class="account-card">
-                    <div class="card-header">
-                        <div class="account-email">
-                            <span class="email-icon">✉️</span>
+                <div class="bg-[#12141c]/65 backdrop-blur-xl border border-[#00f0ff]/15 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,240,255,0.1)]">
+                    <div class="bg-white/5 border-b border-[#00f0ff]/15 px-6 py-4 flex justify-between items-center">
+                        <div class="flex items-center gap-2 text-white font-medium">
+                            <span>✉️</span>
                             ${escapeHtml(acc.email)}
                         </div>
-                        <span class="badge ${badgeClass}">${badgeText}</span>
+                        <span class="px-3 py-1 text-xs font-medium rounded-full border ${badgeClass}">${badgeText}</span>
                     </div>
                     ${emailsHtml}
                 </div>
@@ -104,10 +105,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showError(msg) {
         inboxContainer.innerHTML = `
-            <div class="account-card" style="grid-column: 1 / -1; text-align: center; padding: 4rem;">
-                <div style="color: var(--danger); font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
-                <h3>System Error</h3>
-                <p style="color: var(--text-secondary); margin-top: 0.5rem;">${escapeHtml(msg)}</p>
+            <div class="col-span-full bg-[#12141c]/65 backdrop-blur-xl border border-red-500/30 rounded-2xl p-16 text-center">
+                <div class="text-red-500 text-5xl mb-4">⚠️</div>
+                <h3 class="text-xl font-semibold text-white">System Error</h3>
+                <p class="text-slate-400 mt-2">${escapeHtml(msg)}</p>
             </div>
         `;
     }
@@ -185,7 +186,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (fetchBtn) {
         fetchBtn.addEventListener('click', () => {
             inboxContainer.innerHTML = `
-                <div class="skeleton-card"><div class="skeleton-header"></div><div class="skeleton-line"></div><div class="skeleton-line"></div></div>
+                <div class="bg-[#12141c]/65 backdrop-blur-xl border border-[#00f0ff]/15 rounded-2xl p-6 animate-pulse">
+                    <div class="h-6 bg-white/10 rounded w-1/3 mb-4"></div>
+                    <div class="h-4 bg-white/10 rounded w-full mb-2"></div>
+                    <div class="h-4 bg-white/10 rounded w-5/6 mb-2"></div>
+                    <div class="h-4 bg-white/10 rounded w-4/6"></div>
+                </div>
             `;
             fetchInboxes();
         });
