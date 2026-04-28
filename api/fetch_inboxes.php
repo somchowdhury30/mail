@@ -85,7 +85,7 @@ $all_inboxes = [];
 foreach ($accounts as $acc) {
     $email = $acc['email'];
     $password = $acc['app_password'];
-    $hostname = '{imap.gmail.com:993/imap/ssl}INBOX';
+    $hostname = '{imap.gmail.com:993/imap/ssl/novalidate-cert}INBOX';
 
     $inbox_data = [
         "email" => $email,
