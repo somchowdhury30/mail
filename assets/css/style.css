@@ -490,8 +490,9 @@ body {
     color: #cbd5e1;
     line-height: 1.6;
     font-size: 0.95rem;
-    white-space: pre-wrap;
+    white-space: pre-line;
     word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 /* To handle HTML emails better */
