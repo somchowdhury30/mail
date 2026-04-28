@@ -140,20 +140,27 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('modal-sender').textContent = msg.sender;
             document.getElementById('modal-date').textContent = msg.date;
             
-            // Format body: convert links and basic html
-            let bodyContent = msg.body || 'No content found.';
-            
-            // Basic sanitization/formatting
-            if(!bodyContent.includes('<html') && !bodyContent.includes('<body')) {
-               bodyContent = escapeHtml(bodyContent);
-               // Simple link detection
-               bodyContent = bodyContent.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
-            } else {
-               // Allow basic HTML if it seems to be an HTML email (we rely on PHP's simple parsing or iframe, but for now we just inject. In real prod, use DOMPurify if possible, but we'll allow it for now since it's an admin view)
-               // However, to prevent breaking UI, if it has HTML, we just set innerHTML
+            // Format body: Extract clean minimal text
+            let rawBody = msg.body || 'No content found.';
+            let cleanText = rawBody;
+
+            if (rawBody.includes('<html') || rawBody.includes('<body') || rawBody.includes('<table') || rawBody.includes('<div')) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(rawBody, 'text/html');
+                
+                // Remove scripts, styles, and head elements
+                const injectables = doc.querySelectorAll('script, style, head, meta, title');
+                injectables.forEach(el => el.remove());
+                
+                cleanText = doc.body.innerText || doc.body.textContent || '';
+                cleanText = cleanText.replace(/\n\s*\n/g, '\n\n').trim();
             }
-            
-            document.getElementById('modal-body').innerHTML = bodyContent;
+
+            cleanText = escapeHtml(cleanText);
+            // Simple link detection
+            cleanText = cleanText.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+
+            document.getElementById('modal-body').innerHTML = cleanText;
             
             modal.classList.add('active');
             document.body.style.overflow = 'hidden'; // Prevent background scroll
