@@ -63,7 +63,7 @@ def fetch_inboxes():
                 latest_ids = email_ids[-10:] # Get last 10
                 
                 for e_id in reversed(latest_ids):
-                    res, msg_data = mail.fetch(e_id, "(RFC822.HEADER)")
+                    res, msg_data = mail.fetch(e_id, "(RFC822)")
                     for response_part in msg_data:
                         if isinstance(response_part, tuple):
                             msg = email.message_from_bytes(response_part[1])
@@ -84,14 +84,20 @@ def fetch_inboxes():
                                     
                                     if ctype in ['text/html', 'text/plain'] and 'attachment' not in cdispo:
                                         try:
-                                            body = part.get_payload(decode=True).decode('utf-8', errors='ignore')
-                                            if ctype == 'text/html':
-                                                break # Prefer HTML
+                                            p = part.get_payload(decode=True)
+                                            if p:
+                                                charset = part.get_content_charset() or 'utf-8'
+                                                body = p.decode(charset, errors='ignore')
+                                                if ctype == 'text/html' and len(body) > 0:
+                                                    break # Prefer HTML
                                         except Exception:
                                             pass
                             else:
                                 try:
-                                    body = msg.get_payload(decode=True).decode('utf-8', errors='ignore')
+                                    p = msg.get_payload(decode=True)
+                                    if p:
+                                        charset = msg.get_content_charset() or 'utf-8'
+                                        body = p.decode(charset, errors='ignore')
                                 except Exception:
                                     pass
                                 
