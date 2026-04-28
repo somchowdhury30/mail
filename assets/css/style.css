@@ -1,15 +1,16 @@
 /* B:\Tools_And_Script\Python_project\mail_auto_gmail_inbox\php\assets\css\style.css */
 
 :root {
-    --bg-dark: #0f172a;
-    --bg-card: rgba(30, 41, 59, 0.7);
-    --border-color: rgba(255, 255, 255, 0.1);
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --accent-glow: rgba(99, 102, 241, 0.5);
-    --accent-solid: #6366f1;
-    --success: #10b981;
-    --danger: #ef4444;
+    --bg-dark: #0a0b10;
+    --bg-card: rgba(18, 20, 28, 0.65);
+    --border-color: rgba(0, 240, 255, 0.15);
+    --text-primary: #ffffff;
+    --text-secondary: #8a94a6;
+    --accent-glow: rgba(0, 240, 255, 0.4);
+    --accent-solid: #00f0ff;
+    --success: #00ffcc;
+    --danger: #ff0055;
+    --card-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.0) 100%);
 }
 
 * {
@@ -41,7 +42,7 @@ body {
     left: -10%;
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(99,102,241,0.3) 0%, rgba(15,23,42,0) 70%);
+    background: radial-gradient(circle, rgba(0,240,255,0.15) 0%, rgba(10,11,16,0) 70%);
 }
 
 .bg-glow-2 {
@@ -49,7 +50,7 @@ body {
     right: -10%;
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(236,72,153,0.2) 0%, rgba(15,23,42,0) 70%);
+    background: radial-gradient(circle, rgba(138,43,226,0.15) 0%, rgba(10,11,16,0) 70%);
 }
 
 .container {
@@ -124,6 +125,7 @@ body {
 /* Glassmorphism Card */
 .account-card {
     background: var(--bg-card);
+    background-image: var(--card-gradient);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border-color);
