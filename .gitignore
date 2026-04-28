@@ -1,0 +1,12 @@
+# Sensitive credentials - NEVER commit to git
+config/database.json
+
+# Cache files
+cache/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment files
+.env

@@ -1,0 +1,275 @@
+/* B:\Tools_And_Script\Python_project\mail_auto_gmail_inbox\php\assets\css\style.css */
+
+:root {
+    --bg-dark: #0f172a;
+    --bg-card: rgba(30, 41, 59, 0.7);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --accent-glow: rgba(99, 102, 241, 0.5);
+    --accent-solid: #6366f1;
+    --success: #10b981;
+    --danger: #ef4444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Outfit', sans-serif;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Background Ambient Glow */
+.bg-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    z-index: -1;
+    opacity: 0.6;
+}
+
+.bg-glow-1 {
+    top: -10%;
+    left: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(99,102,241,0.3) 0%, rgba(15,23,42,0) 70%);
+}
+
+.bg-glow-2 {
+    bottom: -10%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(236,72,153,0.2) 0%, rgba(15,23,42,0) 70%);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 3rem;
+}
+
+.brand {
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.brand-icon {
+    font-size: 2rem;
+}
+
+.highlight {
+    background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--success);
+}
+
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--success);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--success);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* Grid Layout */
+.inbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 2rem;
+}
+
+/* Glassmorphism Card */
+.account-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.account-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.4);
+}
+
+.card-header {
+    background: rgba(15, 23, 42, 0.8);
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.account-email {
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.email-icon {
+    color: var(--accent-solid);
+}
+
+.badge {
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-success {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-error {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Emails List */
+.email-list {
+    list-style: none;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.email-list::-webkit-scrollbar {
+    width: 6px;
+}
+.email-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.email-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.email-item {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background 0.2s ease;
+}
+
+.email-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.email-item:last-child {
+    border-bottom: none;
+}
+
+.email-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.email-sender {
+    font-weight: 600;
+    color: #e2e8f0;
+}
+
+.email-subject {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: var(--text-primary);
+}
+
+.empty-state {
+    padding: 3rem 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+/* Skeletons */
+.skeleton-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+}
+
+.skeleton-header {
+    height: 24px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    width: 50%;
+    margin-bottom: 2rem;
+    animation: skel 1.5s infinite ease-in-out;
+}
+
+.skeleton-line {
+    height: 16px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    animation: skel 1.5s infinite ease-in-out;
+}
+
+@keyframes skel {
+    0% { background-color: rgba(255,255,255,0.05); }
+    50% { background-color: rgba(255,255,255,0.1); }
+    100% { background-color: rgba(255,255,255,0.05); }
+}
+
+@media (max-width: 768px) {
+    .inbox-grid {
+        grid-template-columns: 1fr;
+    }
+}
