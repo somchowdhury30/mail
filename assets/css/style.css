@@ -281,20 +281,38 @@ body {
     .inbox-grid {
         grid-template-columns: 1fr;
     }
+    .email-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    .email-meta {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .modal-overlay {
+        align-items: flex-end;
+        padding: 0; /* bottom sheet touches edges */
+    }
     .modal-content {
-        width: 95%;
-        max-height: 85vh;
+        max-width: 100%;
+        width: 100%;
+        height: auto;
+        margin: 0;
+        border-radius: 24px 24px 0 0;
+        transform: translateY(100%); /* Slide from bottom */
     }
-    .modal-header {
-        padding: 1rem;
+    .modal-overlay.active .modal-content {
+        transform: translateY(0);
     }
-    .modal-title {
-        font-size: 1.1rem;
+    .modal-body-container {
+        max-height: 65vh;
     }
-    .input-group {
+    .temp-mail-controls .input-group {
         flex-direction: column;
     }
-    .elite-btn {
+    .temp-mail-controls .input-group input,
+    .temp-mail-controls .input-group button {
         width: 100%;
     }
 }
@@ -369,47 +387,49 @@ body {
     color: var(--text-secondary);
 }
 
-/* Modal Styling */
+/* --- Modal --- */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(15, 23, 42, 0.8);
+    background: rgba(10, 11, 16, 0.8);
     backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    z-index: 1000;
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
     opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-}
-
-.modal-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    padding: 1rem;
+    box-sizing: border-box;
 }
 
 .modal-content {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 16px;
-    width: 90%;
-    max-width: 800px;
+    width: 100%;
+    max-width: 600px;
     max-height: 90vh;
     display: flex;
     flex-direction: column;
-    transform: translateY(20px) scale(0.95);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    box-sizing: border-box;
     overflow: hidden;
 }
 
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
 .modal-overlay.active .modal-content {
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
 }
 
 .modal-header {
@@ -425,8 +445,9 @@ body {
     font-size: 1.25rem;
     font-weight: 600;
     color: var(--text-primary);
-    padding-right: 2rem;
-    line-height: 1.4;
+    margin-right: 2rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .modal-close-btn {
@@ -464,8 +485,10 @@ body {
 }
 
 .meta-value {
-    color: #e2e8f0;
+    color: var(--text-primary);
     font-weight: 500;
+    word-break: break-all;
+    overflow-wrap: break-word;
 }
 
 .modal-body-container {
@@ -474,6 +497,7 @@ body {
     overflow-x: hidden;
     flex-grow: 1;
     width: 100%;
+    max-height: 60vh;
 }
 
 /* Scrollbar for modal */
