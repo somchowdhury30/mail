@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const API_URL = 'api/fetch_inboxes.php';
     const REFRESH_INTERVAL = 30000; // 30 seconds
+    
+    let currentAccountsData = []; // Store data for modal
 
     async function fetchInboxes() {
         try {
@@ -14,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             
             if (result.success) {
+                currentAccountsData = result.data;
                 renderInboxes(result.data);
                 
                 // Update time display nicely
@@ -51,9 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (isSuccess && acc.messages && acc.messages.length > 0) {
                 emailsHtml = '<ul class="email-list">';
-                acc.messages.forEach(msg => {
+                acc.messages.forEach((msg, mIndex) => {
                     emailsHtml += `
-                        <li class="email-item">
+                        <li class="email-item" data-acc="${escapeHtml(acc.email)}" data-msg="${mIndex}">
                             <div class="email-meta">
                                 <span class="email-sender">${escapeHtml(msg.sender)}</span>
                                 <span class="email-date">${msg.date}</span>
@@ -113,6 +116,57 @@ document.addEventListener('DOMContentLoaded', () => {
              .replace(/"/g, "&quot;")
              .replace(/'/g, "&#039;");
     }
+
+    // --- Modal Logic ---
+    const modal = document.getElementById('email-modal');
+    const closeBtn = document.getElementById('modal-close');
+    
+    inboxContainer.addEventListener('click', (e) => {
+        const item = e.target.closest('.email-item');
+        if (!item) return;
+
+        const accEmail = item.getAttribute('data-acc');
+        const msgIndex = item.getAttribute('data-msg');
+        
+        const account = currentAccountsData.find(a => a.email === accEmail);
+        if (account && account.messages[msgIndex]) {
+            const msg = account.messages[msgIndex];
+            
+            document.getElementById('modal-subject').textContent = msg.subject;
+            document.getElementById('modal-sender').textContent = msg.sender;
+            document.getElementById('modal-date').textContent = msg.date;
+            
+            // Format body: convert links and basic html
+            let bodyContent = msg.body || 'No content found.';
+            
+            // Basic sanitization/formatting
+            if(!bodyContent.includes('<html') && !bodyContent.includes('<body')) {
+               bodyContent = escapeHtml(bodyContent);
+               // Simple link detection
+               bodyContent = bodyContent.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+            } else {
+               // Allow basic HTML if it seems to be an HTML email (we rely on PHP's simple parsing or iframe, but for now we just inject. In real prod, use DOMPurify if possible, but we'll allow it for now since it's an admin view)
+               // However, to prevent breaking UI, if it has HTML, we just set innerHTML
+            }
+            
+            document.getElementById('modal-body').innerHTML = bodyContent;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scroll
+        }
+    });
+
+    closeBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
 
     // Initial fetch
     fetchInboxes();

@@ -74,12 +74,33 @@ def fetch_inboxes():
                             
                             if len(sender) > 40:
                                 sender = sender[:37] + "..."
+                            
+                            # Extract Body
+                            body = ""
+                            if msg.is_multipart():
+                                for part in msg.walk():
+                                    ctype = part.get_content_type()
+                                    cdispo = str(part.get('Content-Disposition'))
+                                    
+                                    if ctype in ['text/html', 'text/plain'] and 'attachment' not in cdispo:
+                                        try:
+                                            body = part.get_payload(decode=True).decode('utf-8', errors='ignore')
+                                            if ctype == 'text/html':
+                                                break # Prefer HTML
+                                        except Exception:
+                                            pass
+                            else:
+                                try:
+                                    body = msg.get_payload(decode=True).decode('utf-8', errors='ignore')
+                                except Exception:
+                                    pass
                                 
                             inbox_data["messages"].append({
                                 "id": e_id.decode('utf-8'),
                                 "subject": subject,
                                 "sender": sender,
-                                "date": date_str
+                                "date": date_str,
+                                "body": body
                             })
                             
             mail.close()

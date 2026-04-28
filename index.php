@@ -50,6 +50,29 @@
         </main>
     </div>
 
+    <!-- Elite Email Modal -->
+    <div id="email-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-subject" class="modal-title">Subject</h3>
+                <button id="modal-close" class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-meta">
+                <div class="meta-item">
+                    <span class="meta-label">From:</span>
+                    <span id="modal-sender" class="meta-value">Sender Name</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Date:</span>
+                    <span id="modal-date" class="meta-value">Date</span>
+                </div>
+            </div>
+            <div class="modal-body-container">
+                <div id="modal-body" class="email-body-content"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Frontend Logic -->
     <script src="assets/js/app.js"></script>
 </body>
