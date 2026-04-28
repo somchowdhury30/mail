@@ -28,23 +28,57 @@ function decode_imap_text($str) {
     return htmlspecialchars($decoded, ENT_QUOTES, 'UTF-8');
 }
 
-// Utility to get body
+// Advanced recursive MIME parser
+function get_mime_type($structure) {
+    $primaryMimetype = ["TEXT", "MULTIPART", "MESSAGE", "APPLICATION", "AUDIO", "IMAGE", "VIDEO", "OTHER"];
+    if ($structure->subtype) {
+       return $primaryMimetype[(int)$structure->type] . "/" . $structure->subtype;
+    }
+    return "TEXT/PLAIN";
+}
+
+function get_part($imap, $uid, $mimetype, $structure = false, $partNumber = false) {
+    if (!$structure) {
+        $structure = @imap_fetchstructure($imap, $uid);
+    }
+    if ($structure) {
+        if ($mimetype == get_mime_type($structure)) {
+            if (!$partNumber) {
+                $partNumber = 1;
+            }
+            $text = @imap_fetchbody($imap, $uid, $partNumber);
+            switch ($structure->encoding) {
+                case 3: return base64_decode($text);
+                case 4: return quoted_printable_decode($text);
+                default: return $text;
+            }
+        }
+        if ($structure->type == 1) { // multipart
+            foreach ($structure->parts as $index => $subStruct) {
+                $prefix = "";
+                if ($partNumber) {
+                    $prefix = $partNumber . ".";
+                }
+                $data = get_part($imap, $uid, $mimetype, $subStruct, $prefix . ($index + 1));
+                if ($data) {
+                    return $data;
+                }
+            }
+        }
+    }
+    return false;
+}
+
 function get_imap_body($imap_stream, $msg_num) {
-    $body = @imap_fetchbody($imap_stream, $msg_num, 1);
-    if (!$body) {
-        $body = @imap_fetchbody($imap_stream, $msg_num, 2);
+    $body = get_part($imap_stream, $msg_num, "TEXT/HTML");
+    if (!$body || trim($body) == "") {
+        $body = get_part($imap_stream, $msg_num, "TEXT/PLAIN");
     }
-    // Very basic decode attempt (IMAP bodies are often quoted-printable or base64)
-    $struct = @imap_fetchstructure($imap_stream, $msg_num);
-    if ($struct && isset($struct->parts) && count($struct->parts)) {
-        $encoding = $struct->parts[0]->encoding;
-        if ($encoding == 3) $body = base64_decode($body);
-        elseif ($encoding == 4) $body = quoted_printable_decode($body);
-    } else if ($struct) {
-        if ($struct->encoding == 3) $body = base64_decode($body);
-        elseif ($struct->encoding == 4) $body = quoted_printable_decode($body);
+    if (!$body || trim($body) == "") {
+        // Fallback to fetch everything if parsing fails
+        $body = @imap_fetchbody($imap_stream, $msg_num, 1);
     }
-    return mb_convert_encoding($body, 'UTF-8', 'auto');
+    return mb_convert_encoding(trim($body), 'UTF-8', 'auto');
 }
 
 // 1. Elite Caching Mechanism
