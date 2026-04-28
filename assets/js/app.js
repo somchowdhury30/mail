@@ -153,6 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 injectables.forEach(el => el.remove());
                 
                 cleanText = doc.body.innerText || doc.body.textContent || '';
+                cleanText = cleanText.replace(/\u00A0/g, ' '); // Kill non-breaking spaces
                 cleanText = cleanText.split('\n').map(line => line.trim()).filter(line => line.length > 0).join('\n\n');
             }
 

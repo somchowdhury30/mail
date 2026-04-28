@@ -471,7 +471,9 @@ body {
 .modal-body-container {
     padding: 1.5rem;
     overflow-y: auto;
+    overflow-x: hidden;
     flex-grow: 1;
+    width: 100%;
 }
 
 /* Scrollbar for modal */
@@ -490,9 +492,11 @@ body {
     color: #cbd5e1;
     line-height: 1.6;
     font-size: 0.95rem;
-    white-space: pre-line;
+    white-space: pre-wrap;
     word-break: break-word;
     overflow-wrap: break-word;
+    max-width: 100%;
+    width: 100%;
 }
 
 /* To handle HTML emails better */
